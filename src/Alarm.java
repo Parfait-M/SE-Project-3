@@ -15,8 +15,8 @@ public class Alarm {
 	private int counter = 0;
 	
 	public Alarm() {
-		Media m = new Media(songs[counter]);
-		track = new MediaPlayer(m);
+		//Media m = new Media(songs[counter]);
+		//track = new MediaPlayer(m);
 	}
 	
 	public Alarm(String s) {
@@ -147,4 +147,11 @@ public class Alarm {
 		return date_time.getMinute();
 	}
 	
+	public String getDate() {
+		return (date_time.toLocalDate()).toString();
+	}
+	
+	public String getTime() {
+		return (date_time.toLocalTime()).toString();
+	}
 }

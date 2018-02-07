@@ -1,4 +1,5 @@
 // Parfait's Domain..
+// There may be functions here that
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
@@ -79,7 +80,8 @@ public class View {
 	
 	// Make an alarm ring
 	public void ringNow(Alarm remind) {
-		
+		AlarmVisual alarm = new AlarmVisual(remind);
+		alarm.setVisible(true);
 	}
 
 }
