@@ -24,10 +24,17 @@ public class Alarm {
 		setName(s);
 	}
 	
-	public Alarm(String s, LocalDateTime ld) {
+	public Alarm(String s, LocalDateTime ldt) {
 		this();
 		name = s;
-		setDate_time(ld);
+		setDate_time(ldt);
+	}
+	
+	public Alarm(String s, LocalDate date, LocalTime time) {
+		this();
+		name = s;
+		setDate_time(date,time);
+		
 	}
 	
 	public Alarm(String s, int year, int month, int day, int hour, int min) {
@@ -52,61 +59,72 @@ public class Alarm {
 		this.date_time = date_time;
 	}
 	
-	public void setDayOfMonth(int day) {
+	public void setDate_time(LocalDate date, LocalTime time) {
+		this.date_time = LocalDateTime.of(date, time);
+	}
+	
+	public boolean setDayOfMonth(int day) {
 		try {
 			date_time = date_time.withDayOfMonth(day);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setMonth(int month) {
+	public boolean setMonth(int month) {
 		try {
 			date_time = date_time.withMonth(month);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setYear(int year) {
+	public boolean setYear(int year) {
 		try {
 			date_time = date_time.withYear(year);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setHour(int hour) {
+	public boolean setHour(int hour) {
 		try {
 			date_time = date_time.withHour(hour);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setMin(int min) {
+	public boolean setMin(int min) {
 		try {
 			date_time = date_time.withMinute(min);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setTime(int hour, int min) {
+	public boolean setTime(int hour, int min) {
 		try {
 			date_time = date_time.withHour(hour);
 			date_time = date_time.withMinute(min);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
-	public void setDate_Time(int year, int month, int day, int hour, int min) {
+	public boolean setDate_Time(int year, int month, int day, int hour, int min) {
 		try{
 			date_time = LocalDateTime.of(year, month, day, hour, min);
 		}catch (Exception e) {
-			System.out.println("Invalid date/time. Set to current date and time.");
+			return false;
 		}
+		return true;
 	}
 	
 	public int getYear() {
