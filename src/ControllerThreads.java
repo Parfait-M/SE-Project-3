@@ -1,12 +1,13 @@
 
 
-
+// ControllerThreads class:
+// Contains 2 threads, one for looping through the menu,
+// and one for checking if any reminders will go off.
 public class ControllerThreads extends Thread
 {
 	
 
 	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 5000; // 30 seconds
-	public static boolean quit = false;
 	
 	// Zac
 	public static class MenuThread extends Thread
@@ -20,13 +21,13 @@ public class ControllerThreads extends Thread
 		
 		public void run()
 		{
-			while(!quit)
+			while(true)
 			{
 				// menu loop
 				int input = view.menu();
 				if (input == 3)
 				{
-					quit = true;
+					System.exit(0);
 				}
 			}
 		}
@@ -40,19 +41,21 @@ public class ControllerThreads extends Thread
 		
 		public void run()
 		{
-			while(!quit)
+			while(true)
 			{
+				
+
+				// check reminders from model
+				
+				//test
+					System.out.println("test");
+				//
+				
+				
 				try
 				{
+					// wait...
 					Thread.sleep(TIME_BETWEEN_CHECKING_REMINDERS);
-					
-					// check reminders from model
-					
-					//test
-						System.out.println("test");
-					//
-					
-					
 					
 				} catch (InterruptedException e)
 				{
