@@ -128,6 +128,15 @@ public class Alarm {
 		}
 		return true;
 	}
+	
+	public boolean addMinutes(int min) {
+		try {
+			date_time = date_time.plusMinutes(min);
+		}catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
 
 	public int getYear() {
 		return date_time.getYear();
