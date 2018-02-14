@@ -18,65 +18,22 @@ public class View {
 		sopl(msg);
 	}
 	
-	// Sample menu, still might add some other values to it
-	public int menu() {
-		int x;
-		sopl("\n\t\tMenu\n");
-		sopl("1. View reminders");
-		sopl("2. Create a new reminder");
-		sopl("3. Exit\n");
-		sopl("Make a selection");
-		
-		try {
-			x = kb.nextInt();
-		}catch (Exception e) {
-			return -1;
+	public Object getInput(DataType type) {
+		switch(type) {
+		case INT:
+			return kb.nextInt();
+		case STRING:
+			return kb.next();
+		case FLOAT:
+			return kb.nextFloat();
+		case LINE:
+			return kb.nextLine();
+		default:
+			return kb.next();
 		}
-		return x;
+		
 	}
 	
-	// Allow the user to make a reminder for a certain date and time.
-	// Returns the Alarm object containing the reminder name, date, and time
-	// Starting to think that this might be in Model...but idk
-	public Alarm makeReminder() {
-		String name ="", date = "", time = "";
-		LocalDate d = LocalDate.now();
-		LocalTime t = LocalTime.now();
-		boolean quit = false;
-		
-		sopl("Enter the name for the alarm: ");
-		name = kb.nextLine();
-		
-		do {
-			if(quit)
-				break;
-			sopl("Enter the date in format YYYY-MM-DD : ");
-			date = kb.nextLine();
-			try {
-				d = LocalDate.parse(date);
-				quit = true;
-			}catch(Exception e) {
-				sopl("invalid input entered. Please try again");
-			}
-		}while(!quit);
-		
-		quit = false;
-		do {
-			if(quit)
-				break;
-			sopl("Enter the time in format HH:MM (24hr form): ");
-			time = kb.nextLine();
-			try {
-				t = LocalTime.parse(time);
-				quit = true;
-			}catch (Exception e) {
-				sopl("invalid input entered. Please try again");
-			}
-			
-		}while(!quit);
-		
-		return new Alarm(name,d,t);
-	}
 	
 	// Make an alarm ring
 	public void ringNow(Alarm remind) {
