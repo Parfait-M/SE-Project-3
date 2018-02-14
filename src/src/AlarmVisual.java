@@ -58,11 +58,21 @@ public class AlarmVisual extends JFrame {
 		JButton snoozeButton = new JButton("Snooze");
 		snoozeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				JOptionPane.showMessageDialog(null, "Sorry, this ain't implemented yet");
+				setVisible(false);
+				Model m = new Model();
+				obj.addMinutes(5);
+				m.changeTime(obj.getName(), obj.getDate_time());
+				dispose();
 			}
 		});
 
 		JButton stopButton = new JButton("Stop");
+		stopButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setVisible(false);
+				dispose();
+			}
+		});
 		stopButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		stopButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
 

@@ -39,6 +39,12 @@ public class UnitTest {
     }
   }
 
+  public static void test_view() {
+	  View v = new View();
+	  
+  }
+  
+  
   public static void main(String[] args) {
     // test_model();
 
