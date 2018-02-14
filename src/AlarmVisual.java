@@ -20,6 +20,11 @@ import javax.swing.border.EmptyBorder;
 public class AlarmVisual extends JFrame {
 
 	private JPanel contentPane;
+	private static boolean isSnoozed = false;
+	
+	public boolean getStatus() {
+		return isSnoozed;
+	}
 
 	/**
 	 * Launch the application.
@@ -52,9 +57,7 @@ public class AlarmVisual extends JFrame {
 		snoozeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
-				Model m = new Model();
-				obj.addMinutes(5);
-				m.changeTime(obj.getName(), obj.getDate_time());
+				isSnoozed = true;
 				dispose();
 			}
 		});

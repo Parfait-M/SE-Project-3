@@ -35,9 +35,10 @@ public class View {
 	
 	
 	// Make an alarm ring
-	public void ringNow(Alarm remind) {
+	public boolean ringNow(Alarm remind) {
 		AlarmVisual alarm = new AlarmVisual(remind);
 		alarm.setVisible(true);
+		return alarm.getStatus();
 	}
 
 }
