@@ -2,17 +2,15 @@ package src;
 
 import java.time.*;
 import java.util.*;
-
-
 import java.io.*;
 
 public class UnitTest {
 
   public static LocalDateTime withM(LocalDateTime t, int m) {
-    return t.withMinute(m % 60).withHour(t.getHour() + m / 60);
+    return t.withMinute((120 + m) % 60).withHour(t.getHour() + m / 60);
   }
 
-  public static void test_model() {
+  public static void test_model() throws Exception {
     Model m = new Model();
     LocalDateTime current_time = LocalDateTime.now();
     int min = current_time.getMinute();
@@ -21,7 +19,6 @@ public class UnitTest {
     m.addAlarm("Plopy", withM(current_time, min-2));
     m.addAlarm("Plumy", withM(current_time, min-3));
     m.addAlarm("Pluky", withM(current_time, min+3));
-
 
     System.out.printf("Ctime %d\n",current_time.getMinute());
     System.out.printf("Poopy %d\n",m.getAlarmTime("Poopy").getMinute());
@@ -32,23 +29,14 @@ public class UnitTest {
       System.out.printf("Passed: %s %d\n", a.getName(), a.getMinute());
     }
 
-    m.changeTime("Poopy", current_time.withMinute(min - 10));
+    m.changeTime("Poopy", withM(current_time,min-10));
 
     for (Alarm a : m.getPassedAlarms(current_time)) {
       System.out.printf("New Passed: %s %d\n", a.getName(), a.getMinute());
     }
   }
 
-  public static void main(String[] args) {
-    // test_model();
-
-    // try {
-    //   File file = new File("text.txt");
-    //
-    //   FileOutputStream
-    // }
-    // catch (IOException e) {
-    //   System.err.printf("ERROR: %s\n", e);
-    // }
+  public static void main(String[] args) throws Exception {
+    test_model();
   }
 }
