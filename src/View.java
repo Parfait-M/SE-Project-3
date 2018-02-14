@@ -16,8 +16,13 @@ public class View {
 	public View() {}
 
 	// Just in case you want to print a message to the user, this will do it
-	public void showMessage(String msg) {
+	public void showMessageNL(String msg) {
 		sopl(msg);
+	}
+
+	// Just in case you want to print a message to the user, this will do it
+	public void showMessage(String msg) {
+		sop(msg);
 	}
 
 	public Object getInput(DataType type) {

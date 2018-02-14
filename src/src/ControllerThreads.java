@@ -26,12 +26,10 @@ public class ControllerThreads
 			// menu loop
 			while(true)
 			{
-				
-				// prompt user
-				view.showMessage("\n\tMenu\n"
+				view.showMessageNL("\n\tMenu\n"
 						+ "1. Create a new reminder\n"
 						+ "2. Edit upcoming reminder\n"
-						+ "3. View old reminders\n"
+						+ "3. View missed reminders\n"
 						+ "4. Exit");
 				
 				String choice = (String)view.getInput(DataType.STRING);
@@ -39,12 +37,12 @@ public class ControllerThreads
 				{
 				case "1": createReminder(); break;
 				case "2": editReminder(); break;
-				case "3": viewOldReminders(); break;
+				case "3": displayReminderList(model.getPassedAlarms(LocalDateTime.now()), "missed"); break;
 				case "4": 
-					view.showMessage("Goodbye!");
+					view.showMessageNL("Goodbye!");
 					//Model.saveReminders(); 
 					System.exit(0);
-				default: view.showMessage("Invalid input");
+				default: view.showMessageNL("Invalid input");
 				}
 			}
 		}
@@ -57,12 +55,9 @@ public class ControllerThreads
 			String name = "";
 			LocalDate d;
 			LocalTime t;
-			boolean done = false;
 			
 			// get name or description of reminder
-			view.showMessage("\nWhat is the reminder for? Short description: ");
-			
-			//while()
+			view.showMessageNL("\nWhat is the reminder for? Short description: ");
 			name = (String)view.getInput(DataType.STRING);
 			
 			// get date and time for reminder
@@ -71,7 +66,7 @@ public class ControllerThreads
 			
 			// add reminder to list
 			model.addAlarm(name, d.atTime(t));
-			view.showMessage("Reminder successfully created!");
+			view.showMessageNL("Reminder successfully created!");
 			
 			//model.saveReminders();
 			
@@ -82,56 +77,109 @@ public class ControllerThreads
 		// the user can also delete the reminder.
 		private void editReminder()
 		{
-			// get list from model and display to console through the view
-			String name = "";
-			// user selects a reminder to edit/delete.
-			// selection made by typing name (?) or number...
+			// TODO change to getCurrentAlarms...
+			ArrayList<Alarm> alarms = model.getPassedAlarms(LocalDateTime.now());
 			
-			// edit reminder
-			boolean _return = false;
-			while(!_return) 
+			// print list of upcoming reminders
+			displayReminderList(alarms, "upcoming");
+			if (alarms.size() < 1)
+				return;
+			
+			String choice = "";
+			Integer input = 0;
+			
+			boolean done = false;
+			// get user input
+			while(!done)
 			{
-				view.showMessage("What would you like to change?\n"
+				view.showMessageNL("Which reminder would you like to edit? (\'quit\' to return to menu)");
+				choice = (String)view.getInput(DataType.STRING);
+				if (choice.equals("quit"))
+					return;
+				try
+				{
+					input = Integer.parseInt(choice);
+				} catch (Exception e)
+				{
+					view.showMessageNL("Invalid input");
+					continue;
+				}
+				if (input > alarms.size() || input < 1)
+				{
+					view.showMessageNL("Invalid input");
+				}
+				else done = true;
+			}
+			
+			
+			String name = alarms.get(input-1).getName();
+			while(true) 
+			{
+				printAlarm(alarms.get(input-1));
+				view.showMessageNL("\nWhat would you like to change?\n"
 						+ "1. Change date or time\n"
 						+ "2. Delete reminder\n"
-						+ "3. Return to main menu");
-				String choice = (String)view.getInput(DataType.STRING);
+						+ "3. Return to list\n"
+						+ "4. Return to menu");
+				choice = (String)view.getInput(DataType.STRING);
 				switch (choice)
 				{
 				case "1": 
 					model.changeDate_Time(name,reminderDate(),reminderTime());
-					view.showMessage("Date and time successfully changed.\n");
+					view.showMessageNL("Date and time successfully changed.\n");
 					break;
-				case "2": 
-					model.removeAlarm(model.getAlarm(name)); 
-					view.showMessage("Reminder deleted.\n");
-					break;
+				case "2":
+					view.showMessageNL("\nAre you sure you want to delete this reminder?");
+					String s = (String)view.getInput(DataType.STRING);
+					if (s.equals("y") || s.equals("Y"))
+					{
+						model.removeAlarm(model.getAlarm(name)); 
+						view.showMessageNL("Reminder deleted.\n");
+						editReminder();
+						return;
+					}
+					else break;
 				case "3":
-					_return = true;
-					break;
-				default: view.showMessage("Invalid input");
+					editReminder();
+					return;
+				case "4":
+					return;
+				default: view.showMessageNL("Invalid input");
 				}
 			}
 		}
 		
-		// Allow user to see which reminders he missed
-		// prints a list of old reminders
-		private void viewOldReminders()
+		
+		// prints a list of reminders
+		private void displayReminderList(ArrayList<Alarm> alarms, String type)
 		{
-			ArrayList<Alarm> alarms = model.getPassedAlarms(LocalDateTime.now());
-			view.showMessage("\n\n\tOld reminders");
-			view.showMessage("date\t\ttime\tdescription");
+			if (alarms.size() < 1)
+			{
+				view.showMessageNL("\nYou don't have any " + type + " reminders\n");
+				return;
+			}
+				
+			view.showMessageNL("\n\n\t" + type + " reminders\n");
+			view.showMessageNL("\tdate\t\t\ttime\tdescription");
 			for (int i = 0; i < alarms.size(); ++i)
 			{
 				Alarm alarm = alarms.get(i);
-				// change name of month's case
-				String month = alarm.getMonthName().substring(0,1) 
-						+ alarm.getMonthName().substring(1).toUpperCase();
-				
-				view.showMessage(month + " " + alarm.getDay() + " " + alarm.getYear() 
-						+ "\t" + alarm.getTime() + "\t" + alarm.getName());
+				view.showMessage(i+1 + ".\t");
+				printAlarm(alarm);
 			}
-			view.showMessage("total: " + alarms.size() + "\n");
+			view.showMessageNL("\n\ttotal: " + alarms.size() + "\n");
+		}
+		
+		
+		// print alarm in nice format
+		private void printAlarm(Alarm alarm)
+		{
+			// correct name of month's case
+			String month = alarm.getMonthName().substring(0,1) 
+					+ alarm.getMonthName().substring(1).toLowerCase();
+			
+			view.showMessageNL(month + " " + alarm.getDay() + " " + alarm.getYear() 
+					+ "\t" + alarm.getTime() + "\t" + alarm.getName());
 		}
 		
 		
@@ -141,19 +189,20 @@ public class ControllerThreads
 		{
 			String date = "";
 			LocalDate d = LocalDate.now();
-			boolean quit = false;
-			do {
-				if(quit)
-					break;
-				view.showMessage("Enter the date in format YYYY-MM-DD: ");
+			boolean done = false;
+			while (!done)
+			{
+				view.showMessageNL("Enter the date in format YYYY-MM-DD: ");
 				date = (String)view.getInput(DataType.STRING);
-				try {
+				try 
+				{
 					d = LocalDate.parse(date);
-					quit = true;
-				}catch(Exception e) {
-					view.showMessage("Invalid format...");
+					done = true;
+				} catch(Exception e) 
+				{
+					view.showMessageNL("Invalid format...");
 				}
-			} while(!quit);
+			}
 			
 			return d;
 		}
@@ -164,20 +213,20 @@ public class ControllerThreads
 		{
 			String time = "";
 			LocalTime t = LocalTime.now();
-			boolean quit = false;
-			do {
-				if(quit)
-					break;
-				view.showMessage("Enter the time in format HH:MM (24hr): ");
+			boolean done = false;
+			while (!done)
+			{
+				view.showMessageNL("Enter the time in format HH:MM (24hr): ");
 				time = (String)view.getInput(DataType.STRING);
 				try {
 					t = LocalTime.parse(time);
-					quit = true;
-				}catch (Exception e) {
-					view.showMessage("Invalid format...");
+					done = true;
+				} catch (Exception e) 
+				{
+					view.showMessageNL("Invalid format...");
 				}
 				
-			} while(!quit);
+			}
 			
 			return t;
 		}
