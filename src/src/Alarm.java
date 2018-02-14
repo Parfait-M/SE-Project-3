@@ -145,6 +145,10 @@ public class Alarm {
 	public int getMonth() {
 		return date_time.getMonthValue();
 	}
+	
+	public int getDay() {
+		return date_time.getDayOfMonth();
+	}
 
 	public String getMonthName() {
 		return "" + date_time.getMonth();
