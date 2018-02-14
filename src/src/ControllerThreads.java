@@ -128,7 +128,7 @@ public class ControllerThreads
 				String month = alarm.getMonthName().substring(0,1) 
 						+ alarm.getMonthName().substring(1).toUpperCase();
 				
-				view.showMessage(month + " " /*+ /*alarm.getDay()*/ + " " + alarm.getYear() 
+				view.showMessage(month + " " + alarm.getDay() + " " + alarm.getYear() 
 						+ "\t" + alarm.getTime() + "\t" + alarm.getName());
 			}
 			view.showMessage("total: " + alarms.size() + "\n");
