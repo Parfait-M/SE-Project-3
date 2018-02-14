@@ -1,8 +1,9 @@
 package src;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Scanner;
+import java.util.ArrayList;
 
 // ControllerThreads class:
 // Contains 2 threads, one for looping through the menu,
@@ -22,29 +23,62 @@ public class ControllerThreads
 		
 		public void run()
 		{
-			
+			// menu loop
 			while(true)
 			{
-				// menu loop
+				
 				// prompt user
-				view.showMessage("\n\t\tMenu\n"
-						+ "1. Edit existing reminder\n"
-						+ "2. Create a new reminder\n"
-						+ "3. Exit");
+				view.showMessage("\n\tMenu\n"
+						+ "1. Create a new reminder\n"
+						+ "2. Edit upcoming reminder\n"
+						+ "3. View old reminders\n"
+						+ "4. Exit");
 				
 				String choice = (String)view.getInput(DataType.STRING);
 				switch (choice)
 				{
-				case "1": editReminder(); break;
-				case "2": createReminder(); break;
-				case "3": /*Model.saveReminders();*/ System.exit(0);
+				case "1": createReminder(); break;
+				case "2": editReminder(); break;
+				case "3": viewOldReminders(); break;
+				case "4": 
+					view.showMessage("Goodbye!");
+					//Model.saveReminders(); 
+					System.exit(0);
 				default: view.showMessage("Invalid input");
 				}
 			}
 		}
 		
-		// EditReminder allows user to change any aspect of a reminder
-		// name, date, time, etc.
+		
+		// CreateReminder creates a new reminder based on the user's specifications
+		// It adds the reminder to the reminder list and saves the reminder list to a file. 
+		private void createReminder()
+		{
+			String name = "";
+			LocalDate d;
+			LocalTime t;
+			boolean done = false;
+			
+			// get name or description of reminder
+			view.showMessage("\nWhat is the reminder for? Short description: ");
+			
+			//while()
+			name = (String)view.getInput(DataType.STRING);
+			
+			// get date and time for reminder
+			d = reminderDate();
+			t = reminderTime();
+			
+			// add reminder to list
+			model.addAlarm(name, d.atTime(t));
+			view.showMessage("Reminder successfully created!");
+			
+			//model.saveReminders();
+			
+		}
+		
+				
+		// EditReminder allows user to change the date and time of a reminder
 		// the user can also delete the reminder.
 		private void editReminder()
 		{
@@ -66,11 +100,11 @@ public class ControllerThreads
 				{
 				case "1": 
 					model.changeDate_Time(name,reminderDate(),reminderTime());
-					view.showMessage("Date and time successfully changed.");
+					view.showMessage("Date and time successfully changed.\n");
 					break;
 				case "2": 
 					model.removeAlarm(model.getAlarm(name)); 
-					view.showMessage("Reminder deleted.");
+					view.showMessage("Reminder deleted.\n");
 					break;
 				case "3":
 					_return = true;
@@ -78,6 +112,26 @@ public class ControllerThreads
 				default: view.showMessage("Invalid input");
 				}
 			}
+		}
+		
+		// Allow user to see which reminders he missed
+		// prints a list of old reminders
+		private void viewOldReminders()
+		{
+			ArrayList<Alarm> alarms = model.getPassedAlarms(LocalDateTime.now());
+			view.showMessage("\n\n\tOld reminders");
+			view.showMessage("date\t\ttime\tdescription");
+			for (int i = 0; i < alarms.size(); ++i)
+			{
+				Alarm alarm = alarms.get(i);
+				// change name of month's case
+				String month = alarm.getMonthName().substring(0,1) 
+						+ alarm.getMonthName().substring(1).toUpperCase();
+				
+				view.showMessage(month + " " /*+ /*alarm.getDay()*/ + " " + alarm.getYear() 
+						+ "\t" + alarm.getTime() + "\t" + alarm.getName());
+			}
+			view.showMessage("total: " + alarms.size() + "\n");
 		}
 		
 		
@@ -128,30 +182,6 @@ public class ControllerThreads
 			return t;
 		}
 		
-		// CreateReminder creates a new reminder based on the user's specifications
-		// It adds the reminder to the reminder list and saves the reminder list to a file. 
-		private void createReminder()
-		{
-			String name ="";
-			LocalDate d;
-			LocalTime t;
-			
-			// get name or description of reminder
-			view.showMessage("What is the reminder for? Short description: ");
-			name = (String)view.getInput(DataType.STRING);
-			
-			// get date and time for reminder
-			d = reminderDate();
-			t = reminderTime();
-			
-			Alarm al = new Alarm(name, d, t);
-			view.showMessage("Reminder successfully created!");
-			
-			// add reminder to list
-			//Model.addReminder(al);
-			//Model.saveReminders();
-			
-		}
 		
 	}
 	
