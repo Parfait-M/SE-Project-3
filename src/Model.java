@@ -14,6 +14,26 @@ public class Model {
     alarms.put(name,new Alarm(name, ldt));
   }
 
+  /** Add Alarm
+    alarm: alarm to add
+  */
+  public void addAlarm(Alarm alarm) {
+    alarms.put(alarm.getName(),alarm);
+  }
+
+  /** Remove Alarm
+    name: name of the alarm to remove
+  */
+  public Alarm removeAlarm(String n) {
+    return alarms.remove(n);
+  }
+  /** Remove Alarm
+    a: alarm to remove
+  */
+  public boolean removeAlarm(Alarm a) {
+    return alarms.remove(a.getName(),a);
+  }
+
   /** Get Passed Alarms
     ct: current_time
     returns: a list of alarms that have gone off
@@ -28,7 +48,6 @@ public class Model {
 
     return ans;
   }
-
 
   /** Get Alarm
     n: alarm name
@@ -59,4 +78,17 @@ public class Model {
     Alarm a = alarms.get(n);
     if (a != null) a.setDate_time(t);
   }
+
+  /** Change Date Time
+    n: the name of the alarm to modify the time
+    t: the date to change the alarm to
+    d: the time to change the alarm to
+  */
+  public void changeDate_Time(String n, LocalDate d, LocalTime t) {
+    Alarm a = alarms.get(n);
+    if (a != null) a.setDate_time(d,t);
+  }
+
+
+
 }
