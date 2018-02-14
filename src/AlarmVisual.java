@@ -1,4 +1,4 @@
-
+package src;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -54,27 +54,27 @@ public class AlarmVisual extends JFrame {
 		contentPane.setBackground(Color.LIGHT_GRAY);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		
+
 		JButton snoozeButton = new JButton("Snooze");
 		snoozeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				JOptionPane.showMessageDialog(null, "Sorry, this ain't implemented yet");
 			}
 		});
-		
+
 		JButton stopButton = new JButton("Stop");
 		stopButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		stopButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		
+
 		JLabel title_label = new JLabel(obj.getName());
 		title_label.setFont(new Font("Tahoma", Font.PLAIN, 32));
-		
+
 		JLabel time_label = new JLabel(obj.getTime());
 		time_label.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		
+
 		JLabel date_label = new JLabel(obj.getDate());
 		date_label.setFont(new Font("Tahoma", Font.PLAIN, 28));
-		
+
 		JLabel image = new JLabel("");
 		image.setIcon(new ImageIcon(AlarmVisual.class.getResource("/media/alarm.gif")));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
