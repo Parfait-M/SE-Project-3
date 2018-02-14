@@ -18,19 +18,24 @@ public class Model {
   throws IOException, FileNotFoundException, ClassNotFoundException {
     alarms = new HashMap<String,Alarm>();
 
-    File file = new File(FILE_NAME);
+    try {
+      File file = new File(FILE_NAME);
 
-    FileInputStream fis = new FileInputStream(file);
-    ObjectInputStream ois = new ObjectInputStream(fis);
+      FileInputStream fis = new FileInputStream(file);
+      ObjectInputStream ois = new ObjectInputStream(fis);
 
-    while (ois.readBoolean()) {
-      String name = (String)ois.readObject();
-      LocalDateTime ldt = (LocalDateTime)ois.readObject();
-      alarms.put(name,new Alarm(name,ldt));
+      while (ois.readBoolean()) {
+        String name = (String)ois.readObject();
+        LocalDateTime ldt = (LocalDateTime)ois.readObject();
+        alarms.put(name,new Alarm(name,ldt));
+      }
+
+      ois.close();
+      fis.close();
     }
-
-    ois.close();
-    fis.close();
+    catch (FileNotFoundException e) {
+      return;
+    }
   }
 
   public void saveAlarms()
@@ -166,6 +171,17 @@ public class Model {
     Alarm a = alarms.get(n);
     if (a != null) {
       a.setDate_time(d,t);
+      saveAlarms();
+    }
+  }
+
+  public void changeName(String oldName, String newName)
+  throws IOException, FileNotFoundException {
+    Alarm a = alarms.get(oldName);
+    if (a != null && !oldName.equals(newName)) {
+      alarms.remove(oldName);
+      a.setName(newName);
+      alarms.put(newName,a);
       saveAlarms();
     }
   }

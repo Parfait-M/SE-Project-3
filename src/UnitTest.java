@@ -11,7 +11,20 @@ public class UnitTest {
   }
 
   public static void test_model() throws Exception {
-    Model m = new Model();
+    Model m = null;
+    try {
+      m = new Model();
+    }
+    catch (FileNotFoundException e) {
+      System.err.printf("File Not Found\n");
+    }
+    catch (IOException e) {
+      System.err.printf("IO Exception\n");
+    }
+    catch (ClassNotFoundException e) {
+      System.err.printf("Class Not Found\n");
+    }
+
     LocalDateTime current_time = LocalDateTime.now();
     int min = current_time.getMinute();
 
