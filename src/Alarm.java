@@ -1,4 +1,4 @@
-
+package src;
 
 // Alarm class that holds an alarm's info such as:
 // Name, date, time, and sound
