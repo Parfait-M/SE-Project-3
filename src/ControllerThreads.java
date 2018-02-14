@@ -1,4 +1,3 @@
-package src;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -23,14 +22,12 @@ public class ControllerThreads
 
 		public void run()
 		{
-			// temporary
-			Scanner kb = new Scanner(System.in);
-
+			
 			while(true)
 			{
 				// menu loop
 				menu();
-				String choice = kb.nextLine();//view.getInput();
+				String choice = (String) view.getInput(DataType.STRING);
 				switch (choice)
 				{
 				case "1": ViewReminders(); break;
@@ -76,11 +73,9 @@ public class ControllerThreads
 			LocalTime t = LocalTime.now();
 			boolean quit = false;
 
-			// temporary
-			Scanner kb = new Scanner(System.in);
 
 			view.showMessage("What is the reminder for? Short description: ");
-			name = kb.nextLine();
+			name = (String) view.getInput(DataType.LINE);
 
 
 			// get date and time for reminder
@@ -88,7 +83,7 @@ public class ControllerThreads
 				if(quit)
 					break;
 				view.showMessage("Enter the date in format YYYY-MM-DD: ");
-				date = kb.nextLine();
+				date = (String) view.getInput(DataType.LINE);
 				try {
 					d = LocalDate.parse(date);
 					quit = true;
@@ -102,7 +97,7 @@ public class ControllerThreads
 				if(quit)
 					break;
 				view.showMessage("Enter the time in format HH:MM (24hr): ");
-				time = kb.nextLine();
+				time = (String) view.getInput(DataType.LINE);
 				try {
 					t = LocalTime.parse(time);
 					quit = true;
