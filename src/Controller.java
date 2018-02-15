@@ -252,10 +252,6 @@ public class Controller
 			 */
 			private void printAlarm(Alarm alarm)
 			{
-				// correct name of month's case
-				String month = alarm.getMonthName().substring(0,1) 
-						+ alarm.getMonthName().substring(1).toLowerCase();
-				
 				view.showMessageNL(alarm.getDate() + "\t" + alarm.getTime() + "\t\t" + alarm.getName());
 			}
 			
