@@ -1,5 +1,4 @@
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,12 +11,12 @@ import java.util.ArrayList;
 public class Controller
 {
 
-	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 15000; // 30 seconds
+	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 15000; // 15 seconds
 	public static View view = new View();
 	public static Model model;
 	Controller()
 	{
-		try 
+		try  
 		{
 			model = new Model();
 		} catch (ClassNotFoundException | IOException e)
@@ -288,7 +287,7 @@ public class Controller
 		public void run()
 		{
 			Alarm a;
-	    ArrayList<Alarm> alarms = model.getUpcomingAlarms(LocalDateTime.now());
+	    ArrayList<Alarm> alarms = model.getUpcomingAlarms(LocalDateTime.now().minusSeconds(TIME_BETWEEN_CHECKING_REMINDERS+1));
 			boolean snooze;
 
 	    while(true)
@@ -297,10 +296,15 @@ public class Controller
 	      for(int i = 0; i < alarms.size(); i++)
 	      {
 	        a = alarms.get(i);
-	        if(a.getDate_time().equals(LocalDateTime.now()))
+	        LocalDateTime now = LocalDateTime.now();
+	        if(a.getDay() == now.getDayOfMonth()
+	        	&& a.getMonth() == now.getMonthValue()
+	        	&& a.getYear() == now.getYear()
+	        	&& a.getHour() == now.getHour()
+	        	&& a.getMinute() == now.getMinute())
 	        {
 	          //System.out.println("Alarm!");
-						snooze = view.ringNow(a);
+			snooze = view.ringNow(a);
 	          if(snooze)
 	          {
 	            a.addMinutes(5);
@@ -308,15 +312,15 @@ public class Controller
 
 	          else
 	          {
-							try
-							{
-								model.removeAlarm(a);
-							}
+					try
+					{
+						model.removeAlarm(a);
+					}
 
-							catch (IOException e)
-							{
-								System.out.println("Remove Alarm fucked up!");
-							}
+					catch (IOException e)
+					{
+						System.out.println("Remove Alarm messed up!");
+					}
 	          }
 	        }
 	      }
@@ -331,7 +335,7 @@ public class Controller
 	      {
 					//
 	      }
-	      alarms = model.getUpcomingAlarms(LocalDateTime.now());
+	      alarms = model.getUpcomingAlarms(LocalDateTime.now().minusSeconds(TIME_BETWEEN_CHECKING_REMINDERS+1));
 	    }
 		}
 	}
