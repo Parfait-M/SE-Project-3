@@ -56,7 +56,7 @@ public class AlarmVisual extends JFrame {
 	public AlarmVisual(Alarm obj) {
 		// Code for the frame. If user presses the 'X' button, it just closes
 		// the frame. Not the actual application
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.LIGHT_GRAY);
