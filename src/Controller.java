@@ -5,9 +5,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-// ControllerThreads class:
-// Contains 2 threads, one for looping through the menu,
-// and one for checking if any reminders/alarms will go off.
+/** Controller
+ * Contains 2 threads, one for looping through the menu,
+ * and one for checking if any reminders/alarms will go off.
+ */
 public class Controller
 {
 
@@ -28,7 +29,11 @@ public class Controller
 	}
 
 
-	// Zachary
+		/** MenuThread
+		 * @author Zachary
+		 * Manages interactive menu for the user.
+		 * 
+		 */
 		public static class MenuThread extends Thread
 		{
 			public MenuThread() {}
@@ -60,8 +65,10 @@ public class Controller
 			}
 			
 			
-			// CreateReminder creates a new reminder based on the user's specifications
-			// It adds the reminder to the reminder list and saves the reminder list to a file. 
+			/** createReminder
+			 * creates a new reminder based on the user's specifications
+			 * It adds the reminder to the reminder list and saves the reminder list to a file.
+			 */ 
 			private void createReminder()
 			{
 				String name = "";
@@ -90,8 +97,10 @@ public class Controller
 			}
 			
 					
-			// EditReminder allows user to change the date and time of a reminder
-			// the user can also delete the reminder.
+			/** editReminder
+			 * Allows user to change the date and time of a reminder
+			 * the user can also delete the reminder.
+			 */
 			private void editReminder()
 			{
 				// a list of upcoming reminders
@@ -145,40 +154,61 @@ public class Controller
 					case "1": // change name
 						view.showMessageNL("Enter a new description: ");
 						String newName = (String)view.getInput(DataType.STRING);
-						try
+						if (model.getAlarm(name)!= null)
 						{
-							model.changeName(name, newName);
-						} catch (IOException e)
-						{
-							view.showMessageNL("Error accessing file");
-							System.exit(0);
+							try
+							{
+								model.changeName(name, newName);
+							} catch (IOException e)
+							{
+								view.showMessageNL("Error accessing file");
+								System.exit(0);
+							}
+							view.showMessage("Description successfully changed.\n");
 						}
-						view.showMessage("Description successfully changed.\n");
+						else
+						{
+							view.showMessageNL("Reminder no longer exists.");
+							editReminder();
+							return;
+						}
 						break;
 					case "2": // change date and time
-						try
+						if (model.getAlarm(name)!= null)
 						{
-							model.changeDate_Time(name,reminderDate(),reminderTime());
-						} catch (IOException e)
-						{
-							view.showMessageNL("Error accessing file");
-							System.exit(0);
+							try
+							{
+								model.changeDate_Time(name,reminderDate(),reminderTime());
+							} catch (IOException e)
+							{
+								view.showMessageNL("Error accessing file");
+								System.exit(0);
+							}
+							view.showMessageNL("Date and time successfully changed.\n");
 						}
-						view.showMessageNL("Date and time successfully changed.\n");
+						else
+						{
+							view.showMessageNL("Reminder no longer exists.");
+							editReminder();
+							return;
+						}
 						break;
 					case "3": // delete reminder
 						view.showMessageNL("\nAre you sure you want to delete this reminder? (y/n)");
 						String s = (String)view.getInput(DataType.STRING);
 						if (s.equals("y") || s.equals("Y"))
 						{
-							try
+							if (model.getAlarm(name)!= null)
 							{
-								model.removeAlarm(model.getAlarm(name));
-							} catch (IOException e)
-							{
-								view.showMessageNL("Error accessing file");
-								System.exit(0);
-							} 
+								try
+								{
+									model.removeAlarm(model.getAlarm(name));
+								} catch (IOException e)
+								{
+									view.showMessageNL("Error accessing file");
+									System.exit(0);
+								} 
+							}
 							view.showMessageNL("Reminder deleted.\n");
 							editReminder();
 							return;
@@ -194,8 +224,9 @@ public class Controller
 				}
 			}
 			
-			
-			// prints a list of reminders
+			/** displayReminderList
+			 * prints a list of reminders
+			 */
 			private void displayReminderList(ArrayList<Alarm> alarms, String type)
 			{
 				if (alarms.size() < 1)
@@ -216,7 +247,9 @@ public class Controller
 			}
 			
 			
-			// print alarm in nice format
+			/** printAlarm
+			 * print alarm in nice format
+			 */
 			private void printAlarm(Alarm alarm)
 			{
 				// correct name of month's case
@@ -227,8 +260,10 @@ public class Controller
 			}
 			
 			
-			// Allows user to enter a date.
-			// returns the date if it is valid.
+			/** reminderDate
+			 * Allows user to enter a date.
+			 * @return selected date if it is valid.
+			 */
 			private LocalDate reminderDate()
 			{
 				String date = "";
@@ -251,8 +286,11 @@ public class Controller
 				return d;
 			}
 			
-			// Allows user to enter a time.
-			// returns the time if it is valid.
+			
+			/** reminderTime
+			 * Allows user to enter a time.
+			 * @return selected time if it is valid.
+			 */
 			private LocalTime reminderTime()
 			{
 				String time = "";
