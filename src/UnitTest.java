@@ -1,4 +1,3 @@
-package src;
 
 import java.time.*;
 import java.util.*;
@@ -48,8 +47,38 @@ public class UnitTest {
       System.out.printf("New Passed: %s %d\n", a.getName(), a.getMinute());
     }
   }
+  
+  public static void test_Visual() {
+	  View v = new View();
+	  v.showMessageNL("Testing View and AlarmVisual\n");
+		Alarm remind = new Alarm();
+		String inp;
+		try {
+			v.showMessageNL("Entering ABCDABCD as name for reminder");
+			inp = "ABCDABCD";
+			remind.setName(inp);
+			v.showMessageNL("Entering 2018-11-02 as date for reminder ");
+			inp = "2018-11-02";
+			LocalDate date = LocalDate.parse(inp);
+			v.showMessageNL("Entering 10:45 as time ");
+			inp = "10:45";
+			LocalTime lt = LocalTime.parse(inp);
+			remind.setDate_time(date, lt);
+		}catch(Exception e) {
+			
+		}
+		System.out.println(remind.getName());
+		String yes = "Snooze was pressed", no = "Snooze was NOT pressed";
+		boolean b = v.ringNow(remind);
+		System.out.println(b ? yes : no);
+		v.showMessageNL("Adding 5 minutes to time ");
+		remind.addMinutes(5);
+		b = v.ringNow(remind);
+		System.out.println(b ? yes : no);
+  }
 
   public static void main(String[] args) throws Exception {
     test_model();
+    test_Visual();
   }
 }
