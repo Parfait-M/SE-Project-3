@@ -18,15 +18,15 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
+import javax.swing.SwingConstants;
 
 public class AlarmVisual extends JFrame {
 	
 	private JPanel contentPane;
 	private boolean isSnoozed = false;	// used to detect if user snoozed alarm
 	// Array of song names located in the media package
-	private static String [] tunes = {"clock_buzzer.wav","foghorn.wav",
-							"old_bell.wav","railroad_bell.wav","school_bell.wav",
-							"submarine.wav","watch_alarm.wav"};
+	private static String [] tunes = {"clock_buzzer.wav","old_bell.wav","railroad_bell.wav",
+							"school_bell.wav","submarine.wav","watch_alarm.wav"};
 	private Clip clip;
 	
 	// called by view to pass on whether user snoozed or not
@@ -77,6 +77,7 @@ public class AlarmVisual extends JFrame {
 		}
 
 		JButton snoozeButton = new JButton("Snooze");
+		snoozeButton.setFont(new Font("Sylfaen", Font.BOLD, 18));
 		snoozeButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
@@ -88,6 +89,7 @@ public class AlarmVisual extends JFrame {
 
 		// Snooze stays as false, because it wasn't pressed...
 		JButton stopButton = new JButton("Stop");
+		stopButton.setFont(new Font("Sylfaen", Font.BOLD, 19));
 		stopButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setVisible(false);
@@ -98,14 +100,11 @@ public class AlarmVisual extends JFrame {
 		stopButton.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		stopButton.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-		// Labels for the name, time and date of the alarm
-		JLabel title_label = new JLabel(obj.getName());
-		title_label.setFont(new Font("Tahoma", Font.PLAIN, 32));
-
 		JLabel time_label = new JLabel(obj.getTime());
 		time_label.setFont(new Font("Tahoma", Font.PLAIN, 30));
 
-		JLabel date_label = new JLabel(obj.getDate());
+		String formatted_date = obj.getMonthName().substring(0,3)+" "+obj.getDay()+", "+obj.getYear();
+		JLabel date_label = new JLabel(formatted_date);
 		date_label.setFont(new Font("Tahoma", Font.PLAIN, 28));
 
 		// Try to load image for alarm. If it fails, just displays text in its place
@@ -115,48 +114,53 @@ public class AlarmVisual extends JFrame {
 		}catch(Exception e) {
 			image.setText("Couldn't load image");
 		}
+		
+		JLabel title_label = new JLabel(obj.getName());
+		title_label.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		title_label.setHorizontalAlignment(SwingConstants.CENTER);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(123)
-					.addComponent(title_label)
-					.addContainerGap(137, Short.MAX_VALUE))
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(image)
-							.addPreferredGap(ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addComponent(time_label)
-								.addComponent(date_label)))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(image))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(36)
-							.addComponent(snoozeButton)
-							.addPreferredGap(ComponentPlacement.RELATED, 215, Short.MAX_VALUE)
-							.addComponent(stopButton)))
-					.addGap(51))
+							.addComponent(snoozeButton)))
+					.addPreferredGap(ComponentPlacement.RELATED, 99, Short.MAX_VALUE)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(Alignment.TRAILING, gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addComponent(date_label)
+							.addComponent(time_label))
+						.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+							.addComponent(stopButton)
+							.addGap(33)))
+					.addContainerGap())
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(title_label, GroupLayout.DEFAULT_SIZE, 404, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(title_label)
-					.addGap(21)
+					.addComponent(title_label, GroupLayout.PREFERRED_SIZE, 33, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(time_label)
-							.addGap(18)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
 							.addComponent(date_label)
-							.addPreferredGap(ComponentPlacement.RELATED))
+							.addGap(36))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(image)
-							.addGap(18)))
+							.addPreferredGap(ComponentPlacement.RELATED)))
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(snoozeButton)
 						.addComponent(stopButton))
-					.addGap(24))
+					.addGap(12))
 		);
 		contentPane.setLayout(gl_contentPane);
 	}
