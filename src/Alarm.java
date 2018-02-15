@@ -3,43 +3,35 @@
 // Name, date, time, and sound
 // Date and time are stored in a LocalDateTime object
 // this makes it easier to validate and do other stuff.
+// This is made up of just accessor and mutator functions,
+// all of which are self explanatory
 
 import java.time.*;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.Media;
 
 public class Alarm {
 	private String name ="";
 	private LocalDateTime date_time = LocalDateTime.now();
-	private MediaPlayer track;
-	private String [] songs = {"old_bell.mp3"};
-	private int counter = 0;
 
 	public Alarm() {
-		//Media m = new Media(songs[counter]);
-		//track = new MediaPlayer(m);
+		
 	}
 
 	public Alarm(String s) {
-		this();
 		setName(s);
 	}
 
 	public Alarm(String s, LocalDateTime ldt) {
-		this();
 		name = s;
 		setDate_time(ldt);
 	}
 
 	public Alarm(String s, LocalDate date, LocalTime time) {
-		this();
 		name = s;
 		setDate_time(date,time);
 
 	}
 
 	public Alarm(String s, int year, int month, int day, int hour, int min) {
-		this();
 		name = s;
 		date_time = LocalDateTime.of(year, month, day, hour, min);
 	}
