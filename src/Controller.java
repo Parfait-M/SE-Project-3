@@ -1,4 +1,6 @@
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -10,10 +12,30 @@ import java.util.ArrayList;
 public class Controller
 {
 	
-	// ADAM, feel free to change this as needed ...
 	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 30000; // 30 seconds
 	public static View view = new View();
-	public static Model model = new Model();
+	public static Model model;
+	Controller()
+	{
+		try
+		{
+			model = new Model();
+		} catch (FileNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			
+			e.printStackTrace();
+		} catch (ClassNotFoundException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	// Zachary
 	public static class MenuThread extends Thread
@@ -64,7 +86,18 @@ public class Controller
 			t = reminderTime();
 			
 			// add reminder to list
-			model.addAlarm(name, d.atTime(t));
+			try
+			{
+				model.addAlarm(name, d.atTime(t));
+			} catch (FileNotFoundException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			view.showMessageNL("Reminder successfully created!");
 			
 			//model.saveReminders();
@@ -124,7 +157,18 @@ public class Controller
 				switch (choice)
 				{
 				case "1": 
-					model.changeDate_Time(name,reminderDate(),reminderTime());
+					try
+					{
+						model.changeDate_Time(name,reminderDate(),reminderTime());
+					} catch (FileNotFoundException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					view.showMessageNL("Date and time successfully changed.\n");
 					break;
 				case "2":
@@ -132,7 +176,18 @@ public class Controller
 					String s = (String)view.getInput(DataType.STRING);
 					if (s.equals("y") || s.equals("Y"))
 					{
-						model.removeAlarm(model.getAlarm(name)); 
+						try
+						{
+							model.removeAlarm(model.getAlarm(name));
+						} catch (FileNotFoundException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (IOException e)
+						{
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} 
 						view.showMessageNL("Reminder deleted.\n");
 						editReminder();
 						return;
