@@ -11,8 +11,8 @@ import java.util.ArrayList;
 // and one for checking if any reminders/alarms will go off.
 public class Controller
 {
-	
-	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 30000; // 30 seconds
+
+	public final static int TIME_BETWEEN_CHECKING_REMINDERS = 15000; // 30 seconds
 	public static View view = new View();
 	public static Model model;
 	Controller()
@@ -23,7 +23,7 @@ public class Controller
 		} catch (FileNotFoundException e)
 		{
 			// TODO Auto-generated catch block
-			
+
 			e.printStackTrace();
 		} catch (ClassNotFoundException e)
 		{
@@ -35,13 +35,13 @@ public class Controller
 			e.printStackTrace();
 		}
 	}
-	
-	
+
+
 	// Zachary
 	public static class MenuThread extends Thread
 	{
 		public MenuThread() {}
-		
+
 		public void run()
 		{
 			// menu loop
@@ -52,39 +52,39 @@ public class Controller
 						+ "2. Edit upcoming reminder\n"
 						+ "3. View missed reminders\n"
 						+ "4. Exit");
-				
+
 				String choice = (String)view.getInput(DataType.STRING);
 				switch (choice)
 				{
 				case "1": createReminder(); break;
 				case "2": editReminder(); break;
 				case "3": displayReminderList(model.getPassedAlarms(LocalDateTime.now()), "missed"); break;
-				case "4": 
+				case "4":
 					view.showMessageNL("Goodbye!");
-					//Model.saveReminders(); 
+					//Model.saveReminders();
 					System.exit(0);
 				default: view.showMessageNL("Invalid input");
 				}
 			}
 		}
-		
-		
+
+
 		// CreateReminder creates a new reminder based on the user's specifications
-		// It adds the reminder to the reminder list and saves the reminder list to a file. 
+		// It adds the reminder to the reminder list and saves the reminder list to a file.
 		private void createReminder()
 		{
 			String name = "";
 			LocalDate d;
 			LocalTime t;
-			
+
 			// get name or description of reminder
 			view.showMessageNL("\nWhat is the reminder for? Short description: ");
 			name = (String)view.getInput(DataType.STRING);
-			
+
 			// get date and time for reminder
 			d = reminderDate();
 			t = reminderTime();
-			
+
 			// add reminder to list
 			try
 			{
@@ -99,27 +99,27 @@ public class Controller
 				e.printStackTrace();
 			}
 			view.showMessageNL("Reminder successfully created!");
-			
+
 			//model.saveReminders();
-			
+
 		}
-		
-				
+
+
 		// EditReminder allows user to change the date and time of a reminder
 		// the user can also delete the reminder.
 		private void editReminder()
 		{
 			// TODO change to getCurrentAlarms...
 			ArrayList<Alarm> alarms = model.getPassedAlarms(LocalDateTime.now());
-			
+
 			// print list of upcoming reminders
 			displayReminderList(alarms, "upcoming");
 			if (alarms.size() < 1)
 				return;
-			
+
 			String choice = "";
 			Integer input = 0;
-			
+
 			boolean done = false;
 			// get user input
 			while(!done)
@@ -142,10 +142,10 @@ public class Controller
 				}
 				else done = true;
 			}
-			
-			
+
+
 			String name = alarms.get(input-1).getName();
-			while(true) 
+			while(true)
 			{
 				printAlarm(alarms.get(input-1));
 				view.showMessageNL("\nWhat would you like to change?\n"
@@ -156,7 +156,7 @@ public class Controller
 				choice = (String)view.getInput(DataType.STRING);
 				switch (choice)
 				{
-				case "1": 
+				case "1":
 					try
 					{
 						model.changeDate_Time(name,reminderDate(),reminderTime());
@@ -187,7 +187,7 @@ public class Controller
 						{
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						} 
+						}
 						view.showMessageNL("Reminder deleted.\n");
 						editReminder();
 						return;
@@ -202,8 +202,8 @@ public class Controller
 				}
 			}
 		}
-		
-		
+
+
 		// prints a list of reminders
 		private void displayReminderList(ArrayList<Alarm> alarms, String type)
 		{
@@ -212,7 +212,7 @@ public class Controller
 				view.showMessageNL("\nYou don't have any " + type + " reminders\n");
 				return;
 			}
-				
+
 			view.showMessageNL("\n\n\t" + type + " reminders\n");
 			view.showMessageNL("\tdate\t\t\ttime\tdescription");
 			for (int i = 0; i < alarms.size(); ++i)
@@ -223,20 +223,20 @@ public class Controller
 			}
 			view.showMessageNL("\n\ttotal: " + alarms.size() + "\n");
 		}
-		
-		
+
+
 		// print alarm in nice format
 		private void printAlarm(Alarm alarm)
 		{
 			// correct name of month's case
-			String month = alarm.getMonthName().substring(0,1) 
+			String month = alarm.getMonthName().substring(0,1)
 					+ alarm.getMonthName().substring(1).toLowerCase();
-			
-			view.showMessageNL(month + " " + alarm.getDay() + " " + alarm.getYear() 
+
+			view.showMessageNL(month + " " + alarm.getDay() + " " + alarm.getYear()
 					+ "\t" + alarm.getTime() + "\t" + alarm.getName());
 		}
-		
-		
+
+
 		// Allows user to enter a date.
 		// returns the date if it is valid.
 		private LocalDate reminderDate()
@@ -248,19 +248,19 @@ public class Controller
 			{
 				view.showMessageNL("Enter the date in format YYYY-MM-DD: ");
 				date = (String)view.getInput(DataType.STRING);
-				try 
+				try
 				{
 					d = LocalDate.parse(date);
 					done = true;
-				} catch(Exception e) 
+				} catch(Exception e)
 				{
 					view.showMessageNL("Invalid format...");
 				}
 			}
-			
+
 			return d;
 		}
-		
+
 		// Allows user to enter a time.
 		// returns the time if it is valid.
 		private LocalTime reminderTime()
@@ -275,63 +275,88 @@ public class Controller
 				try {
 					t = LocalTime.parse(time);
 					done = true;
-				} catch (Exception e) 
+				} catch (Exception e)
 				{
 					view.showMessageNL("Invalid format...");
 				}
-				
+
 			}
-			
+
 			return t;
 		}
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
 	// Adam
 	public static class CheckRemindersThread extends Thread
 	{
-		
+
 		public void run()
 		{
-			while(true)
-			{
-				
+			Alarm a;
+	    ArrayList<Alarm> alarms = model.getUpcomingAlarms(LocalDateTime.now());
+			boolean snooze;
 
-				// check reminders from model
-				
-				//test
-				//System.out.println("test");
-				//
-				
-				
-				try
-				{
-					// wait 30 seconds
-					Thread.sleep(TIME_BETWEEN_CHECKING_REMINDERS);
-					
-				} catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
+	    while(true)
+	    {
+	      //current_time = LocalDateTime.now();
+	      for(int i = 0; i < alarms.size(); i++)
+	      {
+	        a = alarms.get(i);
+	        if(a.getDate_time().equals(LocalDateTime.now()))
+	        {
+	          //System.out.println("Alarm!");
+						snooze = view.ringNow(a);
+	          if(snooze)
+	          {
+	            a.addMinutes(5);
+	          }
+
+	          else
+	          {
+							try
+							{
+								model.removeAlarm(a);
+							}
+
+							catch (IOException e)
+							{
+								System.out.println("Remove Alarm fucked up!");
+							}
+	          }
+	        }
+	      }
+
+	      try
+	      {
+	        // Wait 15 seconds
+	        Thread.sleep(TIME_BETWEEN_CHECKING_REMINDERS);
+	      }
+
+	      catch (InterruptedException e)
+	      {
+					//
+	      }
+	      alarms = model.getUpcomingAlarms(LocalDateTime.now());
+	    }
 		}
 	}
-	
 
-	
+
+
 	public static void main(String[] args)
 	{
+		new Controller();
 		new MenuThread().start();
 		new CheckRemindersThread().start();
-		
-	} 
+
+	}
 
 
 
-	
+
 
 }
